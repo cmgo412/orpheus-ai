@@ -1,0 +1,16 @@
+{
+  "labels":[
+    "pop",
+    "rock",
+    "country",
+    "folk",
+    "jazz",
+    "hip hop",
+    "rap",
+    "soul",
+    "blues",
+    "metal"
+  ],
+  "threshold":0.0,
+  "positive_label":null
+}
