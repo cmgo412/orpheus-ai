@@ -9,20 +9,45 @@
 </head>
 <body>
     <div class="container">
-  
+
         <div class="demo-flex-spacer"></div>
-        
+
         <h1 class="demo">Orpheus AI</h1>
 
-        <div class="webpage-style-input-combined">
-            <div class="webpage-style-input">
-                <textarea class="textarea" rows="50" cols="50" placeholder="Enter text"></textarea>
+        <form class="form">
+            <div class="webpage-style-input-combined">
+                <div class="webpage-style-input">
+                    <textarea name="lyrics" class="textarea" rows="50" cols="50" placeholder="Enter text"></textarea>
+                </div>
+                <button type="submit">Submit</button>
             </div>
-            <button type="type">Submit</button>
-        </div>
+        </form>
 
         <div class="demo-flex-spacer"></div>
-      
+
       </div>
+
+      <script>
+        const formElem = document.querySelector('.form');
+
+        formElem.addEventListener('submit', event => {
+            event.preventDefault();
+
+            const formData = new FormData(formElem);
+            console.log(formData.get('lyrics'))
+
+            const data = {"lyrics": formData.get('lyrics')};
+
+            fetch('https://evankozierok.pythonanywhere.com/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(res => res.json())
+              .then(data => console.log(data))
+              .catch(error => console.log(error))
+        })
+      </script>
 </body>
 </html>
