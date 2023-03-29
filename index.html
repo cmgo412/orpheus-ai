@@ -23,12 +23,43 @@
             </div>
         </form>
 
+        <ul class="genres">
+            <li>
+                <span class="genre-name">Test Genre 1</span>
+                <span class="genre-score">50</span>
+            </li>
+            <li>
+                <span class="genre-name">Test Genre 2</span>
+                <span class="genre-score">30</span>
+            </li>
+            <li>
+                <span class="genre-name">Test Genre 3</span>
+                <span class="genre-score">25</span>
+            </li>
+        </ul>
+
         <div class="demo-flex-spacer"></div>
 
       </div>
 
       <script>
         const formElem = document.querySelector('.form');
+        const listElem = document.querySelector('ul');
+
+        // Finds the top N genres that lyrics are most similar to
+        const topGenres = (obj, num = 1) => {
+            const requiredObj = {};
+            if(num > Object.keys(obj).length){
+                return false;
+            };
+            Object.keys(obj).sort((a, b) => obj[b] - obj[a]).forEach((key, ind) =>
+            {
+                if(ind < num){
+                    requiredObj[key] = obj[key];
+                }
+            });
+            return requiredObj;
+        };
 
         formElem.addEventListener('submit', event => {
             event.preventDefault();
@@ -45,7 +76,20 @@
                 },
                 body: JSON.stringify(data)
             }).then(res => res.json())
-              .then(data => console.log(data))
+              .then(data => {
+                  console.log(data);
+                //   console.log(topGenres(data, 3))
+
+                // Find the top 3 genres to display on webpage
+                displayGenres = topGenres(data, 3);
+
+                // Clear the list before inserting next batch of genres into HTML
+                listElem.innerHTML = "";
+
+                for (const key of Object.keys(displayGenres)) {
+                    listElem.insertAdjacentHTML('beforeEnd', `<li><span class="genre-name">${key}</span><span class="genre-score">${displayGenres[key]}</span></li>`);
+                };
+              })
               .catch(error => console.log(error))
         })
       </script>
