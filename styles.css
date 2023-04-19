@@ -198,3 +198,43 @@ textarea::-webkit-scrollbar-thumb {
     transform: scale(0.96);
     box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.20);
 }
+
+/* Control style of top genres list */
+.genres {
+    position: relative;
+    width: 700px;
+    margin: 100px auto 0;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 3rem;
+}
+
+.genres li {
+    display: flex;
+    background: rgba(55, 59, 82, 0.1);
+    padding: 10px 20px;
+    color: white;
+    margin: 5px 0;
+    transition: .5s;
+}
+
+.genres li:nth-child(1) {
+    background: rgba(55, 59, 82, 0.6);
+}
+
+.genres li:nth-child(2) {
+    background: rgba(55, 59, 82, 0.4);
+}
+
+.genres li:nth-child(3) {
+    background: rgba(55, 59, 82, 0.2);
+}
+
+.genres li span:nth-child(1) {
+    width: 700px;
+}
+
+.genres li:hover {
+    transform: scale(1.06);
+    background:rgb(55, 59, 82)
+}
