@@ -3,10 +3,13 @@
 
 import flask
 import os
+# os.environ["TOKENIZERS_PARALLELISM"] = "false"
 from flask import Flask, request
 import pickle
 import spacy
+classifier = None
 # classifier = spacy.load("/home/evankozierok/orpheus-ai/combo")
+# print(classifier("dyoasdyasod").cats)
 # spacy.load('en_core_web_md')
 # from flask_restful import Resource, Api, reqparse
 # import classy_classification
@@ -15,8 +18,8 @@ app = Flask(__name__)
 # api = Api(app)
 
 # print(os.getcwd())
-with open('/home/evankozierok/orpheus-ai/classifier.pickle', 'br') as f:
-    classifier_old = pickle.load(f)
+# with open('/home/evankozierok/orpheus-ai/classifier.pickle', 'br') as f:
+#     classifier_old = pickle.load(f)
 
 # spacy.require_cpu()
 
@@ -42,10 +45,13 @@ random_var = 3.14
 def stuff():
     return {'genre': random_var}
 
+
 @app.route('/predict', methods=['POST'])
 def handle_predict():
     lyrics = request.json['lyrics']
-    genres = classifier_old(lyrics)
+    global classifier
+    classifier = spacy.load("/home/evankozierok/orpheus-ai/combo")
+    genres = classifier(lyrics).cats
     # genres = {'hello': 'world'}
     return genres
 
@@ -55,6 +61,13 @@ def index():
     """ Displays the index page accessible at '/'
     """
     return flask.render_template('index.html')
+
+@app.before_first_request
+def init_model():
+    global classifier
+    if not classifier:
+        print("Loading model for the first time...")
+        classifier = spacy.load("/home/evankozierok/orpheus-ai/combo")
 
 
 if __name__ == '__main__':

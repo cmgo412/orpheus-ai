@@ -38,9 +38,15 @@
             <!--</li>-->
         </ul>
 
+        <div class="chart-container">
+            <canvas id="genre-chart" width="300" height="300"></canvas>
+        </div>
+
         <div class="demo-flex-spacer"></div>
 
       </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
       <script>
         const formElem = document.querySelector('.form');
@@ -69,6 +75,9 @@
 
             const data = {"lyrics": formData.get('lyrics')};
 
+            // Change cursor to loading wheel while model runs
+            document.body.className = 'waiting';
+
             fetch('https://evankozierok.pythonanywhere.com/predict', {
                 method: 'POST',
                 headers: {
@@ -80,15 +89,82 @@
                   console.log(data);
                 //   console.log(topGenres(data, 3))
 
-                // Find the top 3 genres to display on webpage
-                displayGenres = topGenres(data, 3);
+                // Find the top 5 genres to display on webpage
+                displayGenres = topGenres(data, 5);
 
                 // Clear the list before inserting next batch of genres into HTML
                 listElem.innerHTML = "";
 
-                for (const key of Object.keys(displayGenres)) {
-                    listElem.insertAdjacentHTML('beforeEnd', `<li><span class="genre-name">${key}</span><span class="genre-score">${displayGenres[key]}</span></li>`);
-                };
+                // List style for genre predictions
+                // for (const key of Object.keys(displayGenres)) {
+                //     listElem.insertAdjacentHTML('beforeEnd', `<li><span class="genre-name">${key}</span><span class="genre-score">${displayGenres[key]}</span></li>`);
+                // };
+
+                const ctx = document.getElementById('genre-chart');
+
+                // Chart style for genre predictions
+                new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                      labels: Object.keys(displayGenres),
+                      datasets: [{
+                        label: 'Percent Likelihood',
+                        data: Object.values(displayGenres),
+                        backgroundColor: [
+                          'rgba(255, 99, 132, 0.2)',
+                          'rgba(255, 159, 64, 0.2)',
+                          'rgba(255, 205, 86, 0.2)',
+                          'rgba(75, 192, 192, 0.2)',
+                          'rgba(54, 162, 235, 0.2)',
+                          'rgba(153, 102, 255, 0.2)',
+                          'rgba(201, 203, 207, 0.2)'
+                        ],
+                        borderColor: [
+                          'rgb(255, 99, 132)',
+                          'rgb(255, 159, 64)',
+                          'rgb(255, 205, 86)',
+                          'rgb(75, 192, 192)',
+                          'rgb(54, 162, 235)',
+                          'rgb(153, 102, 255)',
+                          'rgb(201, 203, 207)'
+                        ],
+                        borderWidth: 1
+                      }]
+                  },
+                  options: {
+                    plugins: {
+                      legend: {
+                        labels: {
+                          color: '#bfd2ff'
+                        }
+                      }
+                    },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        grid: {
+                          color: '#343434'
+                        },
+                        ticks: {
+                          color: '#bfd2ff'
+                        }
+                      },
+                      x: {
+                        grid: {
+                          color: '#343434'
+                        },
+                        ticks: {
+                          color: '#bfd2ff'
+                        }
+                      }
+                    }
+                  }
+                });
+
+                // Change cursor back to normal after model completes prediction
+                console.log("got here");
+                document.body.className = '';
+
               })
               .catch(error => console.log(error))
         })

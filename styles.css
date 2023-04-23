@@ -238,3 +238,17 @@ textarea::-webkit-scrollbar-thumb {
     transform: scale(1.06);
     background:rgb(55, 59, 82)
 }
+
+/* Control style of doughnut chart for genres */
+.chart-container {
+    position: relative;
+    height: 40vh;
+    width: 80vw;
+    margin: 0 auto;
+    padding: 0 500px;
+}
+
+/* Control style of cursor */
+body.waiting * { 
+    cursor: wait; 
+}
